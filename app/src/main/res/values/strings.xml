@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">漫画</string>
+    <string name="title_activity_main2">MainActivity</string>
+    <string name="title_home">书架</string>
+    <string name="title_dashboard">首页</string>
+    <string name="title_notifications">我的</string>
+    <string name="title_activity_read">MainActivity</string>
+    <string name="url">http://192.168.1.105:8080/</string>
+</resources>
