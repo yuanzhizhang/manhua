@@ -48,6 +48,9 @@ public class CartoonDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ReadActivity.class);
+                intent.putExtra("cId", cartoonBook.getcId());
+
+                intent.putExtra("chapterOrderId",1);
                 startActivity(intent);
             }
         });

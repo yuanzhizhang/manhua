@@ -2,12 +2,15 @@ package com.example.manhua;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.pdf.PdfDocument;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,11 +19,25 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.manhua.adapter.CartoonChapterAdapter;
+import com.example.manhua.api.CartoonService;
+import com.example.manhua.api.ChapterService;
+import com.example.manhua.api.PageService;
+import com.example.manhua.domain.CartoonBook;
 import com.example.manhua.domain.CartoonChapter;
 import com.example.manhua.domain.PageItem;
+import com.example.manhua.response.CartoonBooksResponse;
+import com.example.manhua.response.ChapterResponse;
+import com.example.manhua.response.PageResponse;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ReadFragment extends Fragment {
     Context context;
@@ -29,9 +46,13 @@ public class ReadFragment extends Fragment {
     Button up_btn;
     Button down_btn;
     TextView textView;
+    CartoonChapterAdapter adapter;
 
+    List<PageItem> pages;
+    List<CartoonChapter> cartoonChapters;
+    int cId;
+    int chapterOrderId;
     CartoonChapter cartoonChapter;
-
 
     @Nullable
     @Override
@@ -51,22 +72,25 @@ public class ReadFragment extends Fragment {
         up_btn = view.findViewById(R.id.up_btn);
         down_btn = view.findViewById(R.id.down_btn);
         textView = view.findViewById(R.id.chapter_name);
-        textView.setText("第1话");
 
+
+        Intent intent = getActivity().getIntent();
+
+        cId = intent.getIntExtra("cId",-1);
+        if(chapterOrderId == 0){
+            chapterOrderId = intent.getIntExtra("chapterOrderId",-1);
+        }
         //布局管理器
         LinearLayoutManager manager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(manager);
 
         //设置适配器
-        CartoonChapterAdapter adapter = new CartoonChapterAdapter(context);
+        adapter = new CartoonChapterAdapter(context);
         recyclerView.setAdapter(adapter);
 
+        getChapters();
+
         bindEvents();
-
-        cartoonChapter = initData();
-        adapter.setData(cartoonChapter);
-
-
 
     }
 
@@ -77,6 +101,7 @@ public class ReadFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, CartoonList.class);
+                intent.putExtra("cartoonChapters", (Serializable) cartoonChapters);
                 startActivity(intent);
             }
         });
@@ -85,13 +110,16 @@ public class ReadFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //如果是第一个章节 给上一章绑定事件不能再按， 按了弹出已经是第一个章节了
-                if(cartoonChapter.getChatOrderID()==1) {
-                    textView.setText("这是第一话");
+                if(chapterOrderId==1) {
+                    Toast.makeText(context,"这已经是第一话了",Toast.LENGTH_SHORT).show();
                 }else {
                     //不是第一章
-                    cartoonChapter.setChatOrderID(cartoonChapter.getChatOrderID() - 1);
+                    chapterOrderId -= 1;
+                    cartoonChapter = cartoonChapters.get(chapterOrderId-1);
+                    getPages(cartoonChapter);
+//                    getChapters();
 //                    bookContent.setText("本一章的内容" + chatContent.getChatOrderID()+ "书ID是："+ getActivity().getIntent().getExtras().getInt("bookId"));
-                    textView.setText("第"+cartoonChapter.getChatOrderID()+"话");
+//                    textView.setText(cartoonChapter.getChapterTitle());
                 }
             }
         });
@@ -99,35 +127,83 @@ public class ReadFragment extends Fragment {
         down_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(cartoonChapters.size()==chapterOrderId){
+                    Toast.makeText(context,"最后一话了",Toast.LENGTH_SHORT).show();
+                }else {
+                    chapterOrderId = chapterOrderId+ 1;
+                    Log.v("btn_chapterOrderId",String.valueOf(chapterOrderId));
+                    cartoonChapter = cartoonChapters.get(chapterOrderId-1);
+                    getPages(cartoonChapter);
+                }
 
                 //在这里刷新整个页面 用loadData发送请求拿数据替换
-                cartoonChapter.setChatOrderID(cartoonChapter.getChatOrderID() + 1);
-                textView.setText("第"+cartoonChapter.getChatOrderID()+"话");
+
+//                getChapters();
+//                textView.setText(cartoonChapter.getChapterTitle());
 //                bookContent.setText("本一章的内容" + chatContent.getChatOrderID()+ "书ID是："+ getActivity().getIntent().getExtras().getInt("bookId"));
             }
         });
     }
 
-    private CartoonChapter initData() {
-        CartoonChapter cartoonChapter  = new CartoonChapter();
+    private void getChapters() {
+        Log.v("chapterOrderId",String.valueOf(chapterOrderId));
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(getActivity().getResources().getString(R.string.url))
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
+        ChapterService api = retrofit.create(ChapterService.class);
+        Call<ChapterResponse> call = api.getCartoonChapter(cId);
 
-        cartoonChapter.setCartoonID(1);
-        cartoonChapter.setChatID(1);
-        cartoonChapter.setChatOrderID(1);
-        cartoonChapter.setChatTitle("第一章");
+        call.enqueue(new Callback<ChapterResponse>() {
+            @Override
+            public void onResponse(Call<ChapterResponse> call, Response<ChapterResponse> response)
+            {
 
-        List<PageItem> pageItems = new ArrayList<>();
+                ChapterResponse chapterResponse = response.body();
+                cartoonChapters =  chapterResponse.getChapters();
+                cartoonChapter = cartoonChapters.get(chapterOrderId-1);
+                getPages(cartoonChapter);
+            }
 
-        pageItems.add(new PageItem("http://chapter.cnmanhua.com/comic/D/%E6%96%97%E7%A0%B4%E8%8B%8D%E7%A9%B9%E6%8B%86%E5%88%86%E7%89%88/1%E8%AF%9D/1.jpg-kmh.middle.webp?auth_key=1619624291-bf2ee343e5ef4806ae15815af07ced7c-0-0b3adef48ca88b33045f4a41930d1253",1));
-        pageItems.add(new PageItem("http://chapter.cnmanhua.com/comic/D/%E6%96%97%E7%A0%B4%E8%8B%8D%E7%A9%B9%E6%8B%86%E5%88%86%E7%89%88/1%E8%AF%9D/2.jpg-kmh.middle.webp?auth_key=1619625918-77590a0110d144199b82f05a4166d883-0-7fc4d7edbceeba7013dc69d481f49d8d",2));
-        pageItems.add(new PageItem("http://chapter.cnmanhua.com/comic/D/%E6%96%97%E7%A0%B4%E8%8B%8D%E7%A9%B9%E6%8B%86%E5%88%86%E7%89%88/1%E8%AF%9D/3.jpg-kmh.middle.webp?auth_key=1619626181-8dd9d2b2da3848639399127a9c702236-0-e5f401153629b7a39d98f598d91a07e6",3));
-        pageItems.add(new PageItem("http://chapter.cnmanhua.com/comic/D/%E6%96%97%E7%A0%B4%E8%8B%8D%E7%A9%B9%E6%8B%86%E5%88%86%E7%89%88/1%E8%AF%9D/4.jpg-kmh.middle.webp?auth_key=1619626181-85199cadd1324c30add3d519e120bc7b-0-64a5ade3569fdfb389553225197b07f6",4));
-        pageItems.add(new PageItem("http://chapter.cnmanhua.com/comic/D/%E6%96%97%E7%A0%B4%E8%8B%8D%E7%A9%B9%E6%8B%86%E5%88%86%E7%89%88/1%E8%AF%9D/5.jpg-kmh.middle.webp?auth_key=1619626181-091f6faf133b49448fabcc5e60ea4ee3-0-1fd32acf3d52179471cb5461f8865462",5));
-        pageItems.add(new PageItem("http://chapter.cnmanhua.com/comic/D/%E6%96%97%E7%A0%B4%E8%8B%8D%E7%A9%B9%E6%8B%86%E5%88%86%E7%89%88/1%E8%AF%9D/6.jpg-kmh.middle.webp?auth_key=1619626181-98721c8321e2415ca69ee627186b5724-0-bbe4e543bf75deb639fce61fb20f11fc",6));
+            @Override
+            public void onFailure(Call<ChapterResponse> call, Throwable t)
+            {
+                Log.e("onFailure", t.getMessage());
+                t.printStackTrace();
+            }
+        });
+    }
+    private void getPages(CartoonChapter cartoonChapter) {
+        Log.v("cartoonChapter",cartoonChapter.toString());
+        int chapterId = cartoonChapter.getChapterId();
+        textView.setText(cartoonChapter.getChapterTitle());
 
-        cartoonChapter.setChatContent(pageItems);
+        //获取Pages
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(context.getResources().getString(R.string.url))
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
-        return cartoonChapter;
+        PageService api = retrofit.create(PageService.class);
+        Call<PageResponse> call = api.getPages(chapterId);
+
+        call.enqueue(new Callback<PageResponse>() {
+            @Override
+            public void onResponse(Call<PageResponse> call, Response<PageResponse> response)
+            {
+                PageResponse pageResponse = response.body();
+
+                pages =  pageResponse.getPages();
+                adapter.setData(pages);
+            }
+
+            @Override
+            public void onFailure(Call<PageResponse> call, Throwable t)
+            {
+                Log.e("onFailure", t.getMessage());
+                t.printStackTrace();
+            }
+        });
     }
 }

@@ -1,47 +1,56 @@
 package com.example.manhua.domain;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class CartoonChapter {
-    private Integer chatID;
-    private Integer chatOrderID;
-    private Integer cartoonID;
-    private String chatTitle;
+public class CartoonChapter implements Serializable {
+    private Integer chapterId;
+    private Integer chapterOrderId;
+    private Integer cartoonId;
+    private String chapterTitle;
     private List<PageItem> chatContent;
 
     public CartoonChapter() {
     }
 
-    public Integer getChatID() {
-        return chatID;
+    public CartoonChapter(Integer chapterId, Integer chapterOrderId, Integer cartoonId, String chapterTitle, List<PageItem> chatContent) {
+        this.chapterId = chapterId;
+        this.chapterOrderId = chapterOrderId;
+        this.cartoonId = cartoonId;
+        this.chapterTitle = chapterTitle;
+        this.chatContent = chatContent;
     }
 
-    public void setChatID(Integer chatID) {
-        this.chatID = chatID;
+    public Integer getChapterId() {
+        return chapterId;
     }
 
-    public Integer getChatOrderID() {
-        return chatOrderID;
+    public void setChapterId(Integer chapterId) {
+        this.chapterId = chapterId;
     }
 
-    public void setChatOrderID(Integer chatOrderID) {
-        this.chatOrderID = chatOrderID;
+    public Integer getChapterOrderId() {
+        return chapterOrderId;
     }
 
-    public Integer getCartoonID() {
-        return cartoonID;
+    public void setChapterOrderId(Integer chapterOrderID) {
+        this.chapterOrderId = chapterOrderID;
     }
 
-    public void setCartoonID(Integer cartoonID) {
-        this.cartoonID = cartoonID;
+    public Integer getCartoonId() {
+        return cartoonId;
     }
 
-    public String getChatTitle() {
-        return chatTitle;
+    public void setCartoonId(Integer cartoonId) {
+        this.cartoonId = cartoonId;
     }
 
-    public void setChatTitle(String chatTitle) {
-        this.chatTitle = chatTitle;
+    public String getChapterTitle() {
+        return chapterTitle;
+    }
+
+    public void setChapterTitle(String chapterTitle) {
+        this.chapterTitle = chapterTitle;
     }
 
     public List<PageItem> getChatContent() {
@@ -50,5 +59,16 @@ public class CartoonChapter {
 
     public void setChatContent(List<PageItem> chatContent) {
         this.chatContent = chatContent;
+    }
+
+    @Override
+    public String toString() {
+        return "CartoonChapter{" +
+                "chapterId=" + chapterId +
+                ", chapterOrderId=" + chapterOrderId +
+                ", cartoonId=" + cartoonId +
+                ", chapterTitle='" + chapterTitle + '\'' +
+                ", chatContent=" + chatContent +
+                '}';
     }
 }

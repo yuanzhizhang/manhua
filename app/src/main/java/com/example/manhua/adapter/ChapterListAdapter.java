@@ -1,6 +1,7 @@
 package com.example.manhua.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,9 +42,8 @@ public class ChapterListAdapter extends RecyclerView.Adapter<ChapterListAdapter.
     @Override
     public void onBindViewHolder(@NonNull PageViewHolder holder, int position) {
         CartoonChapter cartoonChapter = cartoonBook.getBookContent().get(position);
-        System.out.println(cartoonChapter.getChatOrderID());
 
-        holder.chapterNO.setText("第"+cartoonChapter.getChatOrderID()+"话");
+        holder.chapterNO.setText(cartoonChapter.getChapterTitle());
     }
 
     @Override
@@ -53,7 +53,6 @@ public class ChapterListAdapter extends RecyclerView.Adapter<ChapterListAdapter.
 
     class PageViewHolder extends RecyclerView.ViewHolder{
         TextView chapterNO;
-        TextView chapterName;
 
         public PageViewHolder(@NonNull View itemView) {
             super(itemView);

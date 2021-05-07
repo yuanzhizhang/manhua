@@ -1,16 +1,27 @@
 package com.example.manhua.domain;
 
 public class PageItem {
+    private Integer pageID;
     private String imageUrl;
-    private Integer page;
-
-    public PageItem(String imageUrl, Integer page) {
-        this.imageUrl = imageUrl;
-        this.page = page;
-    }
+    private Integer pageOrderId;
 
     public PageItem() {
     }
+
+    public PageItem(Integer pageID, String imageUrl, Integer pageOrderId) {
+        this.pageID = pageID;
+        this.imageUrl = imageUrl;
+        this.pageOrderId = pageOrderId;
+    }
+
+    public Integer getPageID() {
+        return pageID;
+    }
+
+    public void setPageID(Integer pageID) {
+        this.pageID = pageID;
+    }
+
 
     public String getImageUrl() {
         return imageUrl;
@@ -20,11 +31,20 @@ public class PageItem {
         this.imageUrl = imageUrl;
     }
 
-    public Integer getPage() {
-        return page;
+    public Integer getPageOrderId() {
+        return pageOrderId;
     }
 
-    public void setPage(Integer page) {
-        this.page = page;
+    public void setPageOrderId(Integer pageOrderId) {
+        this.pageOrderId = pageOrderId;
+    }
+
+    @Override
+    public String toString() {
+        return "PageItem{" +
+                "pageID=" + pageID +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", pageOrderId=" + pageOrderId +
+                '}';
     }
 }
