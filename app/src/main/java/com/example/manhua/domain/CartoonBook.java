@@ -88,4 +88,18 @@ public class CartoonBook implements Serializable {
     public void setCartoonCoverUrl(String cartoonCoverUrl) {
         this.cartoonCoverUrl = cartoonCoverUrl;
     }
+
+    @Override
+    public String toString() {
+        return "CartoonBook{" +
+                "cId=" + cId +
+                ", cName='" + cName + '\'' +
+                ", cartoonLastChat='" + cartoonLastChat + '\'' +
+                ", cartoonUpdateTime='" + cartoonUpdateTime + '\'' +
+                ", cartoonCoverUrl='" + cartoonCoverUrl + '\'' +
+                ", cartoonType='" + cartoonType + '\'' +
+                ", introduction='" + introduction + '\'' +
+                ", bookContent=" + bookContent +
+                '}';
+    }
 }

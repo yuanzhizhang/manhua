@@ -2,6 +2,7 @@ package com.example.manhua;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.pdf.PdfDocument;
 import android.os.Bundle;
 import android.util.Log;
@@ -54,6 +55,9 @@ public class ReadFragment extends Fragment {
     int chapterOrderId;
     CartoonChapter cartoonChapter;
 
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -77,9 +81,8 @@ public class ReadFragment extends Fragment {
         Intent intent = getActivity().getIntent();
 
         cId = intent.getIntExtra("cId",-1);
-        if(chapterOrderId == 0){
-            chapterOrderId = intent.getIntExtra("chapterOrderId",-1);
-        }
+        chapterOrderId = intent.getIntExtra("chapterOrderId",-1);
+
         //布局管理器
         LinearLayoutManager manager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(manager);
@@ -102,7 +105,9 @@ public class ReadFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(context, CartoonList.class);
                 intent.putExtra("cartoonChapters", (Serializable) cartoonChapters);
+                intent.putExtra("cId",cId);
                 startActivity(intent);
+                getActivity().finish();
             }
         });
         //上一章的按钮绑定事件
@@ -117,9 +122,11 @@ public class ReadFragment extends Fragment {
                     chapterOrderId -= 1;
                     cartoonChapter = cartoonChapters.get(chapterOrderId-1);
                     getPages(cartoonChapter);
-//                    getChapters();
-//                    bookContent.setText("本一章的内容" + chatContent.getChatOrderID()+ "书ID是："+ getActivity().getIntent().getExtras().getInt("bookId"));
-//                    textView.setText(cartoonChapter.getChapterTitle());
+
+                    sharedPreferences = getActivity().getSharedPreferences("bookRecord", Context.MODE_PRIVATE);
+                    editor = sharedPreferences.edit();
+                    editor.putInt(String.valueOf(cId), chapterOrderId);
+                    editor.commit();
                 }
             }
         });
@@ -131,9 +138,13 @@ public class ReadFragment extends Fragment {
                     Toast.makeText(context,"最后一话了",Toast.LENGTH_SHORT).show();
                 }else {
                     chapterOrderId = chapterOrderId+ 1;
-                    Log.v("btn_chapterOrderId",String.valueOf(chapterOrderId));
                     cartoonChapter = cartoonChapters.get(chapterOrderId-1);
                     getPages(cartoonChapter);
+
+                    sharedPreferences = getActivity().getSharedPreferences("bookRecord", Context.MODE_PRIVATE);
+                    editor = sharedPreferences.edit();
+                    editor.putInt(String.valueOf(cId), chapterOrderId);
+                    editor.commit();
                 }
 
                 //在这里刷新整个页面 用loadData发送请求拿数据替换
@@ -146,7 +157,6 @@ public class ReadFragment extends Fragment {
     }
 
     private void getChapters() {
-        Log.v("chapterOrderId",String.valueOf(chapterOrderId));
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(getActivity().getResources().getString(R.string.url))
                 .addConverterFactory(GsonConverterFactory.create())
@@ -175,7 +185,6 @@ public class ReadFragment extends Fragment {
         });
     }
     private void getPages(CartoonChapter cartoonChapter) {
-        Log.v("cartoonChapter",cartoonChapter.toString());
         int chapterId = cartoonChapter.getChapterId();
         textView.setText(cartoonChapter.getChapterTitle());
 

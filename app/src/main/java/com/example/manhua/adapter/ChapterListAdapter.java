@@ -17,6 +17,7 @@ import com.example.manhua.domain.CartoonChapter;
 public class ChapterListAdapter extends RecyclerView.Adapter<ChapterListAdapter.PageViewHolder>{
     Context context;
     CartoonBook cartoonBook;
+    private ChapterListAdapter.ChatOnClickListener chatOnClickListener;
 
     public ChapterListAdapter(Context context, CartoonBook cartoonBook) {
         this.context = context;
@@ -44,6 +45,17 @@ public class ChapterListAdapter extends RecyclerView.Adapter<ChapterListAdapter.
         CartoonChapter cartoonChapter = cartoonBook.getBookContent().get(position);
 
         holder.chapterNO.setText(cartoonChapter.getChapterTitle());
+
+        holder.chapterNO.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                if (chatOnClickListener != null)
+                {
+                    chatOnClickListener.onChatClick(cartoonBook, position);
+                }
+            }
+        });
     }
 
     @Override
@@ -60,5 +72,15 @@ public class ChapterListAdapter extends RecyclerView.Adapter<ChapterListAdapter.
 
             chapterNO = itemView.findViewById(R.id.chapter_NO);
         }
+    }
+
+    public void setChatOnClickListener(ChapterListAdapter.ChatOnClickListener onClickListener)
+    {
+        this.chatOnClickListener = onClickListener;
+    }
+
+    public interface ChatOnClickListener
+    {
+        void onChatClick(CartoonBook cartoonBook, int position);
     }
 }

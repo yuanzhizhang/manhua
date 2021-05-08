@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -24,6 +25,10 @@ public class CartoonDetailsActivity extends AppCompatActivity {
     Button startReadBtn;
     Button addBookshefBtn;
 
+    SharedPreferences sharedPreferences;
+    Integer file;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,8 +47,15 @@ public class CartoonDetailsActivity extends AppCompatActivity {
 
         introduction = findViewById(R.id.brief_introduction);
         introduction.setText(cartoonBook.getIntroduction());
-
         startReadBtn = findViewById(R.id.start_read_btn);
+        addBookshefBtn = findViewById(R.id.add_bookshef_btn);
+
+        sharedPreferences = getSharedPreferences("bookShelf", Context.MODE_PRIVATE);
+        file = sharedPreferences.getInt(cartoonBook.getcName(),0);
+
+        changBtn();
+
+
         startReadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,5 +67,31 @@ public class CartoonDetailsActivity extends AppCompatActivity {
             }
         });
 
+
+        addBookshefBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                if(file==0) {
+
+                    editor.putInt(cartoonBook.getcName(), cartoonBook.getcId());
+                    editor.commit();
+                }else {
+
+                    editor.remove(cartoonBook.getcName());
+                    editor.commit();
+                }
+                file = sharedPreferences.getInt(cartoonBook.getcName(),0);
+                changBtn();
+            }
+        });
+    }
+
+    public void changBtn(){
+        if(file==0){
+            addBookshefBtn.setText("加入书架");
+        }else {
+            addBookshefBtn.setText("移除书架");
+        }
     }
 }

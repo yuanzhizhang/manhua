@@ -14,11 +14,12 @@ import com.bumptech.glide.Glide;
 import com.example.manhua.R;
 import com.example.manhua.domain.CartoonBook;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CartoonBookshelfAdapter extends RecyclerView.Adapter<CartoonBookshelfAdapter.MyViewHolder>{
     private Context context;
-    private List<CartoonBook> cartoonBooks;
+    private List<CartoonBook> cartoonBooks = new ArrayList<>();
 
     private ChatOnClickListener chatOnClickListener;
 
@@ -33,6 +34,11 @@ public class CartoonBookshelfAdapter extends RecyclerView.Adapter<CartoonBookshe
 
     public void setData(List<CartoonBook> cartoonBooks){
         this.cartoonBooks = cartoonBooks;
+        notifyDataSetChanged();
+    }
+
+    public void addData(CartoonBook cartoonBook){
+        this.cartoonBooks.add(cartoonBook);
         notifyDataSetChanged();
     }
 
