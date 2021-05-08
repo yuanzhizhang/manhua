@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -63,6 +64,16 @@ public class RimanFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         initData();
+        adapter.setChatOnClickListener(new CartoonDashboardAdapter.ChatOnClickListener() {
+            @Override
+            public void onChatClick(CartoonBook cartoonBook, int position)
+            {
+                fun();
+                Intent intent = new Intent(context, CartoonDetailsActivity.class);
+                intent.putExtra("cartoonbook", cartoonBook);
+                startActivity(intent);
+            }
+        });
 
     }
 
@@ -95,5 +106,9 @@ public class RimanFragment extends Fragment {
                 t.printStackTrace();
             }
         });
+    }
+    private void fun()
+    {
+
     }
 }
