@@ -3,6 +3,7 @@ package com.example.manhua;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
@@ -24,6 +25,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity {
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +46,6 @@ public class LoginActivity extends AppCompatActivity {
                     StrictMode.setThreadPolicy(policy);
                 }
 
-//                User user = new User(name.getText().toString(),password.getText().toString());
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 
                 Retrofit retrofit = new Retrofit.Builder()
@@ -60,24 +63,14 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response)
                     {
-//                ResponseBody responseBody = response.body();
-//                try
-//                {
-//                    String jsonStr = responseBody.string();
-//                    Log.e("jsonStr", jsonStr);
-//                    // 将Json字符串转化我实体类
-//                    // Gson
-//                    Gson gson = new Gson();
-//                    Joke joke = gson.fromJson(jsonStr, Joke.class);
-//                    adapter.setData(joke.getJokes());
-//                }
-//                catch (IOException e)
-//                {
-//                    e.printStackTrace();
-//                }
                         LoginResponse loginResponse = response.body();
                         String res = (String)loginResponse.getRes();
                         if (res.equals("true")){
+                            sharedPreferences = getSharedPreferences("login", Context.MODE_PRIVATE);
+                            editor = sharedPreferences.edit();
+                            editor.putString("login", "ok");
+                            editor.commit();
+
                             startActivity(intent);
                         }else {
                             Context context = LoginActivity.this;
@@ -95,44 +88,6 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
 
-
-//                try {
-//                    String res = call.execute().body().getRes();
-//                    System.out.println(res);
-//                    if(res.equals("true")){
-//                    //页面跳转
-//                        startActivity(intent);
-//                    }else{
-//                        //提示信息
-//                        Context context = LoginActivity.this;
-//                        Toast.makeText(context,"用户名或密码错误",Toast.LENGTH_SHORT).show();
-//                        return;
-//                    }
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-
-
-//                Retrofit retrofit = new Retrofit.Builder()
-//                        .baseUrl("https://autumnfish.cn/api/")
-//                        .addConverterFactory(GsonConverterFactory.create())
-//                        .build();
-//
-//                ApiService api = retrofit.create(ApiService.class);
-//
-//                Call<Joke> call = api.getJokes(20);
-
-
-//                if(){
-//                    //页面跳转
-//
-//                    startActivity(intent);
-//                }else{
-//                    //提示信息
-//                    Context context = LoginActivity.this;
-//                    Toast.makeText(context,"用户名或密码错误",Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
             }
         });
 

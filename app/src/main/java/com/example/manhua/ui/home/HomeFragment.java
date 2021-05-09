@@ -78,8 +78,6 @@ public class HomeFragment extends Fragment {
                 String cId = String.valueOf(cartoonBook.getcId());
                 sharedPreferences = getActivity().getSharedPreferences("bookRecord", Context.MODE_PRIVATE);
                 chapterOrderId = sharedPreferences.getInt(cId,1);
-                Log.v("11111111111",cId);
-                Log.v("22222222222",String.valueOf(chapterOrderId));
                 Intent intent = new Intent(context, ReadActivity.class);
                 intent.putExtra("cId", cartoonBook.getcId());
                 intent.putExtra("chapterOrderId",chapterOrderId);
@@ -111,10 +109,7 @@ public class HomeFragment extends Fragment {
                 {
 
                     CartoonResponse cartoonResponse = response.body();
-                    Log.v("1111111111",cartoonResponse.toString());
                     CartoonBook cartoonBook = cartoonResponse.getCartoonBook();
-                    Log.v("2222222222",cartoonBook.toString());
-//                    cartoonBooks.add(cartoonBook);
                     adapter.addData(cartoonBook);
                 }
 

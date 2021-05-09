@@ -64,7 +64,6 @@ public class CartoonList extends AppCompatActivity {
                 Intent intent = new Intent(context, ReadActivity.class);
                 intent.putExtra("chapterOrderId", cartoonBook.getBookContent().get(position).getChapterOrderId());
                 intent.putExtra("cId",cId);
-                Log.v("111111111",String.valueOf(cartoonBook.getBookContent().get(position).getChapterOrderId()));
                 startActivity(intent);
                 finish();
             }

@@ -49,16 +49,7 @@ public class CartoonDashboardAdapter  extends RecyclerView.Adapter<CartoonDashbo
     public void onBindViewHolder(@NonNull CartoonDashboardAdapter.MyViewHolder holder, int position) {
         CartoonBook cartoonBook = cartoonBooks.get(position);
 
-//        if(cartoonBook.getcName()==null){
-//            holder.bookName.setText("zyz");
-//        }else {
-//            holder.bookName.setText("不空");
-//        }
         holder.bookName.setText(cartoonBook.getcName());
-
-//        holder.textView.setText("zyz");
-
-//        Log.d("123",cartoonBook.getcName());
 
         Glide.with(context)
                 .load(cartoonBook.getCartoonCoverUrl())
