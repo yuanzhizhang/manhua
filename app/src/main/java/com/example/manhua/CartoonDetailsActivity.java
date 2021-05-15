@@ -18,9 +18,7 @@ public class CartoonDetailsActivity extends AppCompatActivity {
     CartoonBook cartoonBook;
     TextView bookName;
     ImageView image;
-    TextView author;
     TextView introduction;
-    TextView type;
     Context context;
     Button startReadBtn;
     Button addBookshefBtn;

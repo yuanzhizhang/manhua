@@ -51,6 +51,7 @@ public class CartoonDashboardAdapter  extends RecyclerView.Adapter<CartoonDashbo
 
         holder.bookName.setText(cartoonBook.getcName());
 
+
         Glide.with(context)
                 .load(cartoonBook.getCartoonCoverUrl())
                 .into(holder.imageView);
@@ -65,6 +66,7 @@ public class CartoonDashboardAdapter  extends RecyclerView.Adapter<CartoonDashbo
                 }
             }
         });
+
     }
 
     @Override

@@ -58,13 +58,8 @@ public class RecommendFragment extends Fragment {
         recyclerView = view.findViewById(R.id.read_list_recommend);
 
         //布局管理器
-//        LinearLayoutManager manager = new LinearLayoutManager(context);
-//        recyclerView.setLayoutManager(manager);
-//        GridLayoutManager layoutManager = new GridLayoutManager(context,3);
         RecyclerView.LayoutManager layoutManager=new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
-//        recyclerView.setLayoutManager(new GridLayoutManager(context, 3));
-
 
         //设置适配器
         adapter = new CartoonDashboardAdapter(context);

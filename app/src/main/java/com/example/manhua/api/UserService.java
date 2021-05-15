@@ -17,6 +17,9 @@ public interface UserService
     @GET("user/login")
     Call<LoginResponse> login(@Query("username")String username, @Query("password")String password);
 
+    @GET("user/addUser")
+    Call<Integer> addUser(@Query("username") String username,@Query("password")String password);
+
     @GET("jokes/joke")
     Call<LoginResponse> getJoke();
 }

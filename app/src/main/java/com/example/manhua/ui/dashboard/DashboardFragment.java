@@ -74,22 +74,7 @@ public class DashboardFragment extends Fragment {
         useBanner();
     }
 
-//    class ImageLoadBanner extends ImageLoader {
-//
-//        @Override
-//        public void displayImage(Context context, Object path, ImageView imageView) {
-//            imageView.setImageResource(Integer.parseInt(path.toString()));
-//        }
-//    }
-
     public void useBanner() {
-//        cartoonBook = new CartoonBook();
-//        cartoonBooks = new ArrayList<>();
-
-
-
-//        Log.e("1111111111",cartoonBook.toString());
-
         banner = getView().findViewById(R.id.banner);
         imageAdapter = new ImageAdapter(cartoonBooks,getContext());
 
@@ -133,7 +118,6 @@ public class DashboardFragment extends Fragment {
                     CartoonBooksResponse cartoonBooksResponse = response.body();
                     cartoonBooks = cartoonBooksResponse.getCartoonBooks();
                     imageAdapter.setBooks(cartoonBooks);
-                    Log.v("11111111111111111",cartoonBooks.toString());
                 }
 
                 @Override
@@ -143,21 +127,6 @@ public class DashboardFragment extends Fragment {
                     t.printStackTrace();
                 }
             });
-
-//        CartoonBook cartoonBook1 = new CartoonBook();
-//        cartoonBook1.setcId(1);
-//        cartoonBook1.setCartoonCoverUrl("https://i.loli.net/2021/05/02/q4LZd1vkjFyAN6z.png");
-//        cartoonBooks.add(cartoonBook1);
-//
-//        CartoonBook cartoonBook2 = new CartoonBook();
-//        cartoonBook2.setcId(2);
-//        cartoonBook2.setCartoonCoverUrl("https://i.loli.net/2021/05/02/wUkC5Ygf9exGINM.png");
-//        cartoonBooks.add(cartoonBook2);
-//
-//        CartoonBook cartoonBook3 = new CartoonBook();
-//        cartoonBook3.setcId(3);
-//        cartoonBook3.setCartoonCoverUrl("https://i.loli.net/2021/05/05/TtCRgfqP95cJiWB.png");
-//        cartoonBooks.add(cartoonBook3);
 
         return cartoonBooks;
     }

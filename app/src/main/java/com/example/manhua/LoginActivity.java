@@ -18,6 +18,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.manhua.response.LoginResponse;
 
+import org.w3c.dom.Text;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
         EditText username = findViewById(R.id.username);
         EditText password = findViewById(R.id.password);
         TextView loginBtn = findViewById(R.id.login_btn);
+        TextView addUserBtn = findViewById(R.id.add_user);
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             //重写点击事件的处理方法onClick()
@@ -88,6 +91,15 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
 
+            }
+        });
+
+        addUserBtn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, AddUserActivity.class);
+                startActivity(intent);
             }
         });
 

@@ -12,6 +12,7 @@ public class CartoonBook implements Serializable {
     private String cartoonType;
     private String introduction;
 
+
     public String getIntroduction() {
         return introduction;
     }
