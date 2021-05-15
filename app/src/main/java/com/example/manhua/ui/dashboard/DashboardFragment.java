@@ -67,7 +67,7 @@ public class DashboardFragment extends Fragment {
 
 //      DashboardViewPagerAdapter
 
-        DashboardViewPagerAdapter adapter = new DashboardViewPagerAdapter(getParentFragmentManager());
+        DashboardViewPagerAdapter adapter = new DashboardViewPagerAdapter(getChildFragmentManager());
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
 
